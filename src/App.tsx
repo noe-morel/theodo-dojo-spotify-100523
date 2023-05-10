@@ -3,6 +3,7 @@ import './App.css';
 import { useState } from 'react';
 import { fetchTracks } from './lib/fetchTracks';
 import { useQuery } from '@tanstack/react-query';
+import { SavedTrack, Track } from 'spotify-types';
 
 const trackUrls = [
   'https://p.scdn.co/mp3-preview/742294f35af9390e799dd96c633788410a332e52',
@@ -17,13 +18,24 @@ const App = () => {
     queryKey: ['tracks'],
     queryFn: fetchTracks,
   });
-  console.log();
+  console.log(tracks);
 
   const [trackIndex, setTrackIndex] = useState(0);
 
   const goToNextTrack = () => {
     setTrackIndex(trackIndex + 1);
   };
+
+  const AlbumCover = ({ track }: { track: Track }) => {
+    const src = track.album.images[0]?.url; // A changer ;)
+    return (
+      <img
+        src={track?.album?.images[0].url}
+        style={{ width: 400, height: 400 }}
+      />
+    );
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -36,6 +48,9 @@ const App = () => {
         </p>
         <audio src={trackUrls[trackIndex]} autoPlay controls />
         <button onClick={goToNextTrack}>Next track</button>
+        <p> nombre de musiques : {tracks?.length}</p>
+        <p> première musique : {tracks?.[0].track.name}</p>
+        <AlbumCover track={tracks?.[0]} />
       </div>
       <div className="App-buttons"></div>
     </div>
